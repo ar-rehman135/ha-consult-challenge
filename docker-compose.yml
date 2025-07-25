@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_POSTHOG_KEY: ${POSTHOG_KEY}
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_POSTHOG_KEY=${POSTHOG_KEY}
+    depends_on:
+      - backend
+    # REMOVE volumes for production!
+    networks:
+      - stock-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://stock_user:password123@postgres:5432/stock_backtester
+      - POSTHOG_KEY=${POSTHOG_KEY}
+      - CORS_ORIGINS=http://localhost:3000
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+    networks:
+      - stock-network
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=stock_backtester
+      - POSTGRES_USER=stock_user
+      - POSTGRES_PASSWORD=password123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - stock-network
+
+volumes:
+  postgres_data:
+
+networks:
+  stock-network:
+    driver: bridge 
