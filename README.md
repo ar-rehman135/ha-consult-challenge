@@ -43,7 +43,7 @@ A fullstack application for backtesting rule-based stock trading strategies usin
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd Stock_Strategy_Analyzer
+cd ha-consult-challenge
 ```
 
 2. Copy environment variables:
