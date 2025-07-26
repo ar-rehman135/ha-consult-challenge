@@ -19,11 +19,11 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_POSTHOG_KEY: ${POSTHOG_KEY}
-        NEXT_PUBLIC_API_URL: http://backend:8000
+        NEXT_PUBLIC_API_URL: http://ec2-3-22-242-215.us-east-2.compute.amazonaws.com:8000
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://ec2-3-22-242-215.us-east-2.compute.amazonaws.com:8000
       - NEXT_PUBLIC_POSTHOG_KEY=${POSTHOG_KEY}
     depends_on:
       - backend
