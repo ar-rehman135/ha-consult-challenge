@@ -60,7 +60,6 @@ build/
 # -----------------
 # Media / data files
 # -----------------
-backend/app/services/stock_data_files/*.csv
 media/
 staticfiles/
 
