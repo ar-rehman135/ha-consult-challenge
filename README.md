@@ -21,6 +21,16 @@ A fullstack application for backtesting rule-based stock trading strategies usin
 │ - Results Chart │    │ - Data Service  │    │ - User Data     │
 │ - Analytics     │    │ - Strategy Exec │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+         ▲
+         │
+         │
+┌─────────────────┐
+│  Posthog-Node   │
+│   Analytics     │
+│                 │
+│ - Tracks        │
+│   backtest_event│
+└─────────────────┘
 ```
 
 ## Tech Stack
@@ -48,7 +58,8 @@ cd ha-consult-challenge
 
 2. Copy environment variables:
 ```bash
-cp ..env .env
+cp backend/..env backend/.env
+cp frontend/..env frontend/.env
 ```
 
 3. Start the application:
