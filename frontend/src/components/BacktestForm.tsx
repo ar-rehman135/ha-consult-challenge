@@ -172,13 +172,13 @@ console.log({availableTickers});
             <select
               value={formData.rule.if_condition}
               onChange={(e) => handleInputChange('rule.if_condition', e.target.value)}
-              className="input-field"
+              className="input-field text-black"
               required
             >
-              <option value="price > sma">Price &gt; SMA</option>
-              <option value="price < sma">Price &lt; SMA</option>
-              <option value="price >= sma">Price &gt;= SMA</option>
-              <option value="price <= sma">Price &lt;= SMA</option>
+              <option value="price > sma" className='text-black'>Price &gt; SMA</option>
+              <option value="price < sma" className='text-black'>Price &lt; SMA</option>
+              <option value="price >= sma" className='text-black'>Price &gt;= SMA</option>
+              <option value="price <= sma" className='text-black'>Price &lt;= SMA</option>
             </select>
           </div>
 
@@ -190,13 +190,13 @@ console.log({availableTickers});
               <select
                 value={formData.rule.then_action}
                 onChange={(e) => handleInputChange('rule.then_action', e.target.value)}
-                className="input-field"
+                className="input-field text-black"
                 required
               >
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-                <option value="hold">Hold</option>
-                <option value="exit">Exit</option>
+                <option value="buy" className='text-black'>Buy</option>
+                <option value="sell" className='text-black'>Sell</option>
+                <option value="hold" className='text-black'>Hold</option>
+                <option value="exit" className='text-black'>Exit</option>
               </select>
             </div>
             <div>
@@ -206,13 +206,13 @@ console.log({availableTickers});
               <select
                 value={formData.rule.else_action}
                 onChange={(e) => handleInputChange('rule.else_action', e.target.value)}
-                className="input-field"
+                className="input-field text-black"
                 required
               >
-                <option value="hold">Hold</option>
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-                <option value="exit">Exit</option>
+                <option value="hold" className='text-black'>Hold</option>
+                <option value="buy" className='text-black'>Buy</option>
+                <option value="sell" className='text-black'>Sell</option>
+                <option value="exit" className='text-black'>Exit</option>
               </select>
             </div>
           </div>
