@@ -1,5 +1,7 @@
 'use client';
 
+import { Router } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface AuthFormProps {
@@ -21,6 +23,7 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +48,6 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
       const data = await response.json();
 
       if (mode === 'login') {
-        // Store token in localStorage
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('user', JSON.stringify({
           id: data.user_id,
@@ -59,7 +61,6 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
           role: data.role
         });
       } else {
-        // For registration, show success message and switch to login
         alert('Registration successful! Please login.');
         window.location.reload();
       }
@@ -148,6 +149,16 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
         >
           {loading ? 'Loading...' : (mode === 'login' ? 'Login' : 'Register')}
         </button>
+
+        {mode === 'register' && formData.role === 'premium' && (
+          <button
+            type="button"
+            onClick={()=> router.push('https://buy.stripe.com/test_00w9AT6Wk5CVdqu2rj2oE00')}
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Pay with Stripe
+          </button>
+        )}
       </form>
 
       <div className="mt-4 text-center">

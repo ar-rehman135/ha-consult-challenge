@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface User {
@@ -15,6 +16,7 @@ interface UserProfileProps {
 
 export default function UserProfile({ user, onLogout }: UserProfileProps) {
   const [showProfile, setShowProfile] = useState(false);
+  const router = useRouter()
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
@@ -103,6 +105,12 @@ export default function UserProfile({ user, onLogout }: UserProfileProps) {
             )}
 
             <div className="border-t border-gray-200 pt-3">
+              <button
+                onClick={()=> router.push('https://buy.stripe.com/test_00w9AT6Wk5CVdqu2rj2oE00')}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm mb-2"
+              >
+                Subscribe
+              </button>
               <button
                 onClick={onLogout}
                 className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
