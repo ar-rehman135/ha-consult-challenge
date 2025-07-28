@@ -74,7 +74,7 @@ console.log({availableTickers});
               type="text"
               value={formData.ticker}
               onChange={(e) => handleInputChange('ticker', e.target.value.toUpperCase())}
-              className="input-field pr-10"
+              className="input-field pr-10 text-black"
               placeholder="e.g., AAPL"
               required
             />
@@ -100,7 +100,7 @@ console.log({availableTickers});
                         handleInputChange('ticker', ticker);
                         setShowTickerDropdown(false);
                       }}
-                      className="text-left px-2 py-1 text-sm hover:bg-gray-100 rounded"
+                      className="text-left px-2 py-1 text-sm hover:bg-gray-100 rounded text-black"
                     >
                       {ticker}
                     </button>
@@ -122,7 +122,7 @@ console.log({availableTickers});
               type="date"
               value={formData.start_date}
               onChange={(e) => handleInputChange('start_date', e.target.value)}
-              className="input-field"
+              className="input-field text-black"
               required
             />
           </div>
@@ -135,7 +135,7 @@ console.log({availableTickers});
               type="date"
               value={formData.end_date}
               onChange={(e) => handleInputChange('end_date', e.target.value)}
-              className="input-field"
+              className="input-field text-black"
               required
             />
           </div>
@@ -151,7 +151,7 @@ console.log({availableTickers});
             type="number"
             value={formData.sma_period}
             onChange={(e) => handleInputChange('sma_period', parseInt(e.target.value))}
-            className="input-field"
+            className="input-field text-black"
             min="1"
             max="200"
             required

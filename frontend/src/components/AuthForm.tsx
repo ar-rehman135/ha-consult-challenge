@@ -101,7 +101,7 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             placeholder="Enter your email"
           />
         </div>
@@ -118,7 +118,7 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
             onChange={handleChange}
             required
             minLength={8}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             placeholder="Enter your password"
           />
         </div>
@@ -133,7 +133,7 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             >
               <option value="user">User</option>
               <option value="premium">Premium</option>
