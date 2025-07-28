@@ -24,15 +24,16 @@ export default function AuthForm({ onAuthSuccess, mode }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter()
-
+    console.log(process.env.NEXT_PUBLIC_API_URL)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
+      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

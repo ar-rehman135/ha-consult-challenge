@@ -42,7 +42,7 @@ backtest_service = BacktestService()
 data_service = DataService()
 
 # Include authentication routes
-app.include_router(auth_router)
+app.include_router(auth_router, prefix="/api")
 
 @app.get("/")
 async def root():
@@ -53,12 +53,12 @@ async def root():
         "docs": "/docs"
     }
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
-@app.post("/backtest", response_model=BacktestResponse)
+@app.post("/api/backtest", response_model=BacktestResponse)
 async def run_backtest(
     request: BacktestRequest,
     background_tasks: BackgroundTasks,
@@ -163,12 +163,12 @@ async def run_backtest(
             detail="An unexpected error occurred. Please try again later."
         )
 
-@app.get("/tickers", response_model=List[str])
+@app.get("/api/tickers", response_model=List[str])
 async def get_available_tickers():
     """Get a list of popular stock tickers for suggestions"""
     return data_service.get_available_tickers()
 
-@app.get("/premium/advanced-analytics")
+@app.get("/api/premium/advanced-analytics")
 async def get_advanced_analytics(
     current_user: User = Depends(require_premium_or_admin)
 ):
@@ -184,7 +184,7 @@ async def get_advanced_analytics(
         "user_role": current_user.role
     }
 
-@app.get("/backtest-runs", response_model=List[BacktestRunResponse])
+@app.get("/api/backtest-runs", response_model=List[BacktestRunResponse])
 async def get_backtest_runs(
     skip: int = 0,
     limit: int = 10,
@@ -203,7 +203,7 @@ async def get_backtest_runs(
         logger.error(f"Error fetching backtest runs: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch backtest runs")
 
-@app.get("/backtest-runs/{run_id}", response_model=BacktestRunResponse)
+@app.get("/api/backtest-runs/{run_id}", response_model=BacktestRunResponse)
 async def get_backtest_run(
     run_id: int, 
     current_user: User = Depends(get_current_user),

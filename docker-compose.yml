@@ -17,17 +17,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_POSTHOG_KEY: ${POSTHOG_KEY}
-        NEXT_PUBLIC_API_URL: http://ec2-3-22-242-215.us-east-2.compute.amazonaws.com:8000
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://ec2-3-22-242-215.us-east-2.compute.amazonaws.com:8000
-      - NEXT_PUBLIC_POSTHOG_KEY=${POSTHOG_KEY}
+    env_file:
+      - ./frontend/.env
     depends_on:
       - backend
-    # REMOVE volumes for production!
     networks:
       - stock-network
 
@@ -37,10 +32,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://stock_user:password123@postgres:5432/stock_backtester
-      - POSTHOG_KEY=${POSTHOG_KEY}
-      - CORS_ORIGINS=*
+    env_file:
+      - ./backend/.env
     depends_on:
       - postgres
     volumes:
@@ -50,10 +43,8 @@ services:
 
   postgres:
     image: postgres:15
-    environment:
-      - POSTGRES_DB=stock_backtester
-      - POSTGRES_USER=stock_user
-      - POSTGRES_PASSWORD=password123
+    env_file:
+      - ./backend/.env
     ports:
       - "5433:5432"
     volumes:

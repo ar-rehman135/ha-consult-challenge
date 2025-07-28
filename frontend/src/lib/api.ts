@@ -104,7 +104,7 @@ export class ApiService {
 
   static async runBacktest(request: BacktestRequest): Promise<BacktestResponse> {
     try {
-      const response = await api.post('/backtest', request);
+      const response = await api.post('/api/backtest', request);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -119,7 +119,7 @@ export class ApiService {
 
   static async getAvailableTickers(): Promise<string[]> {
     try {
-      const response = await api.get('/tickers');
+      const response = await api.get('/api/tickers');
       return response.data;
     } catch (error) {
       console.error('Error fetching tickers:', error);
@@ -129,7 +129,7 @@ export class ApiService {
 
   static async getBacktestRuns(skip: number = 0, limit: number = 10): Promise<BacktestRun[]> {
     try {
-      const response = await api.get(`/backtest-runs?skip=${skip}&limit=${limit}`);
+      const response = await api.get(`/api/backtest-runs?skip=${skip}&limit=${limit}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching backtest runs:', error);
@@ -139,7 +139,7 @@ export class ApiService {
 
   static async getBacktestRun(id: number): Promise<BacktestRun> {
     try {
-      const response = await api.get(`/backtest-runs/${id}`);
+      const response = await api.get(`/api/backtest-runs/${id}`);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -153,7 +153,7 @@ export class ApiService {
 
   static async healthCheck(): Promise<boolean> {
     try {
-      const response = await api.get('/health');
+      const response = await api.get('/api/health');
       return response.data.status === 'healthy';
     } catch (error) {
       return false;

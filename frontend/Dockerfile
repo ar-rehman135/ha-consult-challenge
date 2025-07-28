@@ -16,11 +16,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time envs
-ARG NEXT_PUBLIC_POSTHOG_KEY
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# Copy .env file for build time
+COPY .env .env
+
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm run build
@@ -48,6 +46,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules ./n
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy .env file to runtime
+COPY --chown=nextjs:nodejs .env ./
 
 # Copy our custom server.js file
 COPY --chown=nextjs:nodejs server.js ./
