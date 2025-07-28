@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 
 import ApiService, { BacktestRequest, BacktestResponse } from '../../lib/api';
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 
 
 export default function StockPage() {
@@ -24,7 +25,7 @@ export default function StockPage() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         const userData = localStorage.getItem('user');
-    
+
         if (token && userData) {
           setIsAuthenticated(true);
           setUser(JSON.parse(userData));
@@ -43,14 +44,15 @@ export default function StockPage() {
         ApiService.clearToken();
         router.push('/');
       };
-    
+
       const handleBacktestSubmit = async (request: BacktestRequest) => {
         setIsLoading(true);
         setError(null);
         setResults(null);
-    
+
         try {
           const response = await ApiService.runBacktest(request);
+          posthog.capture('backtest_event', { property: request })
           setResults(response);
     
           // Track analytics event
