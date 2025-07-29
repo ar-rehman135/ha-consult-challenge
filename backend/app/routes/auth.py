@@ -12,12 +12,13 @@ from ..services.auth_service import (
     require_role, require_premium_or_admin
 )
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+router = APIRouter(prefix="/api/auth", tags=["authentication"])
+
 
 @router.post("/register", response_model=UserResponse)
 async def register(
-    user_data: UserCreate,
-    db: Session = Depends(get_db)
+        user_data: UserCreate,
+        db: Session = Depends(get_db)
 ):
     """
     Register a new user
@@ -47,10 +48,11 @@ async def register(
             detail="Error creating user"
         )
 
+
 @router.post("/login", response_model=Token)
 async def login(
-    user_credentials: UserLogin,
-    db: Session = Depends(get_db)
+        user_credentials: UserLogin,
+        db: Session = Depends(get_db)
 ):
     """
     Login user and return access token
@@ -64,14 +66,14 @@ async def login(
             email=user_credentials.email,
             password=user_credentials.password
         )
-        
+
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
+
         # Create access token
         access_token_expires = timedelta(minutes=auth_service.access_token_expire_minutes)
         access_token = auth_service.create_access_token(
@@ -82,7 +84,7 @@ async def login(
             },
             expires_delta=access_token_expires
         )
-        
+
         return Token(
             access_token=access_token,
             token_type="bearer",
@@ -91,7 +93,7 @@ async def login(
             email=user.email,
             role=user.role
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -100,9 +102,10 @@ async def login(
             detail="Error during login"
         )
 
+
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(
-    current_user: User = Depends(get_current_active_user)
+        current_user: User = Depends(get_current_active_user)
 ):
     """
     Get current user information
@@ -114,11 +117,12 @@ async def get_current_user_info(
         created_at=current_user.created_at
     )
 
+
 @router.put("/me", response_model=UserResponse)
 async def update_current_user(
-    user_update: UserUpdate,
-    current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_db)
+        user_update: UserUpdate,
+        current_user: User = Depends(get_current_active_user),
+        db: Session = Depends(get_db)
 ):
     """
     Update current user information
@@ -133,7 +137,7 @@ async def update_current_user(
                     detail="Email already registered"
                 )
             current_user.email = user_update.email
-        
+
         if user_update.role is not None:
             # Only allow role updates for admins or self-updates to premium
             if current_user.role != "admin" and user_update.role not in ["user", "premium"]:
@@ -142,18 +146,18 @@ async def update_current_user(
                     detail="Insufficient permissions to set this role"
                 )
             current_user.role = user_update.role
-        
+
         current_user.updated_at = current_user.updated_at
         db.commit()
         db.refresh(current_user)
-        
+
         return UserResponse(
             id=current_user.id,
             email=current_user.email,
             role=current_user.role,
             created_at=current_user.created_at
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -163,11 +167,12 @@ async def update_current_user(
             detail="Error updating user"
         )
 
+
 @router.post("/change-password")
 async def change_password(
-    password_change: PasswordChange,
-    current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_db)
+        password_change: PasswordChange,
+        current_user: User = Depends(get_current_active_user),
+        db: Session = Depends(get_db)
 ):
     """
     Change current user's password
@@ -179,7 +184,7 @@ async def change_password(
             current_password=password_change.current_password,
             new_password=password_change.new_password
         )
-        
+
         if success:
             return {"message": "Password changed successfully"}
         else:
@@ -187,7 +192,7 @@ async def change_password(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Error changing password"
             )
-            
+
     except HTTPException:
         raise
     except Exception as e:
@@ -195,101 +200,3 @@ async def change_password(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error changing password"
         )
-
-# Admin routes
-@router.get("/users", response_model=List[UserResponse])
-async def get_all_users(
-    skip: int = 0,
-    limit: int = 100,
-    current_user: User = Depends(require_role("admin")),
-    db: Session = Depends(get_db)
-):
-    """
-    Get all users (admin only)
-    """
-    try:
-        users = db.query(User).offset(skip).limit(limit).all()
-        return [
-            UserResponse(
-                id=user.id,
-                email=user.email,
-                role=user.role,
-                created_at=user.created_at
-            )
-            for user in users
-        ]
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error fetching users"
-        )
-
-@router.put("/users/{user_id}/role", response_model=UserResponse)
-async def update_user_role(
-    user_id: int,
-    role_update: UserUpdate,
-    current_user: User = Depends(require_role("admin")),
-    db: Session = Depends(get_db)
-):
-    """
-    Update user role (admin only)
-    """
-    try:
-        if role_update.role is None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Role is required"
-            )
-        
-        user = auth_service.update_user_role(
-            db=db,
-            user_id=user_id,
-            new_role=role_update.role
-        )
-        
-        return UserResponse(
-            id=user.id,
-            email=user.email,
-            role=user.role,
-            created_at=user.created_at
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error updating user role"
-        )
-
-@router.delete("/users/{user_id}")
-async def deactivate_user(
-    user_id: int,
-    current_user: User = Depends(require_role("admin")),
-    db: Session = Depends(get_db)
-):
-    """
-    Deactivate a user (admin only)
-    """
-    try:
-        user = auth_service.get_user_by_id(db, user_id)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-        
-        user.is_active = False
-        user.updated_at = user.updated_at
-        db.commit()
-        
-        return {"message": f"User {user.email} deactivated successfully"}
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error deactivating user"
-        ) 
