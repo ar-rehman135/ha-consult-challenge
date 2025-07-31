@@ -5,7 +5,7 @@ import os
 
 # Database URL
 DATABASE_URL = os.getenv("DATABASE_URL",
-                         "postgresql://postgres:password@postgres:5432/stock_backtester")
+                         "postgresql://stock_user:password123@postgres:5432/stock_backtester")
 
 # Create sync engine (not async to avoid asyncpg dependency)
 engine = create_engine(DATABASE_URL)

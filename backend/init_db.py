@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(__file__))
 
 # Database URL
 DATABASE_URL = os.getenv("DATABASE_URL",
-                         "postgresql://postgres:password@postgres:5432/stock_backtester")
+                         "postgresql://stock_user:password123@postgres:5432/stock_backtester")
 
 # Create base class for models (using the new import)
 Base = declarative_base()
